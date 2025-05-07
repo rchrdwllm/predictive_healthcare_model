@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import pandas as pd
 from disease_preprocess import count_cases
 from disease_outbreak import detect_outbreak_per_day, predict_future_outbreaks
@@ -24,3 +25,36 @@ print('\nDetected outbreaks:\n', detected_outbreaks)
 forecasted_outbreaks = predict_future_outbreaks(disease_counts, days=7)
 
 print('\nForecasted outbreaks:\n', forecasted_outbreaks)
+
+# for plotting stuff
+detected_outbreaks['source'] = 'historical'
+forecasted_outbreaks['source'] = 'forecasted'
+
+total_outbreaks = pd.concat(
+    [detected_outbreaks, forecasted_outbreaks], ignore_index=True)
+
+total_outbreaks['date'] = pd.to_datetime(total_outbreaks['date'])
+
+for disease in total_outbreaks['prognosis'].unique():
+    disease_data = total_outbreaks[total_outbreaks['prognosis'] == disease]
+    plt.figure(figsize=(10, 5))
+
+    hist = disease_data[disease_data['source'] == 'historical']
+    plt.plot(hist['date'], hist['cases'],
+             label='Historical', marker='o', color='blue')
+
+    forecast = disease_data[disease_data['source'] == 'forecasted']
+    if not forecast.empty:
+        plt.plot(forecast['date'], forecast['cases'],
+                 label='Forecasted', marker='o', color='orange')
+
+    outbreak_dates = disease_data[disease_data['outbreak'] == 1]['date']
+    outbreak_cases = disease_data[disease_data['outbreak'] == 1]['cases']
+    plt.scatter(outbreak_dates, outbreak_cases,
+                color='red', label='Outbreak', zorder=5)
+    plt.title(f'Disease Cases and Outbreaks: {disease}')
+    plt.xlabel('Date')
+    plt.ylabel('Cases')
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
