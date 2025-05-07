@@ -13,6 +13,8 @@ print('Disease counts:\n', disease_counts)
 
 # then let's say overtime malaki na yung dataset natin, pag naglalagay sila ng bagong entry, pede na
 # tayo gumawa ng detection ng outbreaks, based sa average cases per prognosis per day
+# (or not necessarily namang malaki na yung dataset, basta may historical data tayo ng mga cases at
+# naga-add sila ng entries ganun)
 detected_outbreaks = detect_outbreak_per_day(disease_counts)
 
 print('\nDetected outbreaks:\n', detected_outbreaks)
