@@ -39,6 +39,10 @@ symptoms = [
 
 
 class SymptomCheckerApp:
+    '''
+    A GUI application for predicting diseases based on symptoms using a pre-trained model.
+    '''
+
     def __init__(self, root):
         self.root = root
         self.root.title('Disease Prediction - SymbiPredict')
@@ -115,6 +119,12 @@ class SymptomCheckerApp:
 
 
 def check_symptoms():
+    '''
+    Initializes the Tkinter GUI for symptom checking and disease prediction.
+    Returns:
+        pd.DataFrame: DataFrame containing the latest user input data.
+    '''
+
     root = tk.Tk()
     app = SymptomCheckerApp(root)
 
