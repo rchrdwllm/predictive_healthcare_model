@@ -2,6 +2,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from disease_preprocess import count_cases
 from disease_outbreak import detect_outbreak_per_day, predict_future_outbreaks
+from disease_detect import check_symptoms
+
+# so eto muna kunwari gui dedetect ng disease, after non maa-add siya sa 'dataset/sample_user_data.csv'
+# accessible yung last entry ng user sa `latest_entry` variable if ever na need
+latest_entry = check_symptoms()
 
 # let's say na lang na may master list na tayo ng entry ng users of their symptoms and kasama na dun yung predicted disease
 # bale manggagaling 'to sa user input ng symptoms nila
