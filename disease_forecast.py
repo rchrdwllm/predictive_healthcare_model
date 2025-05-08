@@ -48,6 +48,15 @@ def make_disease_forecast(df: pd.DataFrame, period: int = 7) -> list:
 
         forecast['cases'] = forecast['cases'].clip(lower=0)
 
+        last_hist_date = disease_data['ds'].max()
+        last_hist_cases = disease_data[disease_data['ds']
+                                       == last_hist_date]['y'].values[0]
+        forecast_start_idx = forecast[forecast['date']
+                                      > last_hist_date].index.min()
+        if pd.notnull(forecast_start_idx):
+            if forecast.loc[forecast_start_idx, 'cases'] < last_hist_cases:
+                forecast.loc[forecast_start_idx, 'cases'] = last_hist_cases
+
         forecast.reset_index(drop=True, inplace=True)
 
         forecasts.append(forecast)
