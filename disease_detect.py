@@ -99,6 +99,10 @@ class SymptomCheckerApp:
             predicted_disease = le.inverse_transform(prediction)
             input_df['date'] = datetime.now().strftime('%Y-%m-%d')
             input_df['prognosis'] = predicted_disease[0]
+            input_df['name'] = 'Richard William B. Flores'
+            input_df['age'] = 21
+            input_df['gender'] = 'Male'
+            input_df['location'] = 'Marikina City'
 
             csv_path = 'dataset/sample_user_data.csv'
             file_exists = os.path.isfile(csv_path)
