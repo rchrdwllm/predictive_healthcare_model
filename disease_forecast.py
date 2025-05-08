@@ -18,11 +18,15 @@ def make_disease_forecast(df: pd.DataFrame, period: int = 7) -> list:
     forecasts = []
 
     for disease in unique_diseases:
+        print(f"Forecasting for {disease}...")
+
         disease_data = df[df['prognosis'] == disease]
         disease_data = disease_data.rename(
             columns={'date': 'ds', 'cases': 'y'})
 
         if disease_data.dropna().shape[0] < 2:
+            print(f"Not enough data to forecast for {disease}.")
+
             continue
 
         model = Prophet(
