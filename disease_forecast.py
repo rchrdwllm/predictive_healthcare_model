@@ -38,10 +38,11 @@ def make_disease_forecast(df: pd.DataFrame, period: int = 7) -> list:
         forecast['prognosis'] = disease
         forecast['yhat'] = forecast['yhat'].round(0).astype(int)
 
-        # forecast = forecast[forecast['ds'] > disease_data['ds'].max()]
         forecast = forecast[['ds', 'yhat', 'prognosis']]
         forecast = forecast.rename(
             columns={'ds': 'date', 'yhat': 'cases'})
+
+        forecast['cases'] = forecast['cases'].clip(lower=0)
 
         forecast.reset_index(drop=True, inplace=True)
 

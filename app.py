@@ -31,10 +31,9 @@ forecasted_outbreaks = predict_future_outbreaks(disease_counts, days=7)
 
 print('\nForecasted outbreaks:\n', forecasted_outbreaks)
 
-# Determine the split date between historical and forecasted data
+# for plotting
 split_date = detected_outbreaks['date'].max()
 
-# Add 'source' column to forecasted_outbreaks based on date
 forecasted_outbreaks['source'] = forecasted_outbreaks['date'].apply(
     lambda d: 'historical' if pd.to_datetime(
         d) <= pd.to_datetime(split_date) else 'forecasted'
@@ -42,23 +41,21 @@ forecasted_outbreaks['source'] = forecasted_outbreaks['date'].apply(
 
 total_outbreaks = forecasted_outbreaks.copy()
 
-# Ensure date is datetime
 total_outbreaks['date'] = pd.to_datetime(total_outbreaks['date'])
 
-# Plot for each disease
 for disease in total_outbreaks['prognosis'].unique():
     disease_data = total_outbreaks[total_outbreaks['prognosis'] == disease]
     plt.figure(figsize=(10, 5))
-    # Plot historical
+
     hist = disease_data[disease_data['source'] == 'historical']
     plt.plot(hist['date'], hist['cases'],
              label='Historical', marker='o', color='blue')
-    # Plot forecasted
+
     forecast = disease_data[disease_data['source'] == 'forecasted']
     if not forecast.empty:
         plt.plot(forecast['date'], forecast['cases'],
                  label='Forecasted', marker='o', color='orange')
-    # Mark outbreaks
+
     outbreak_dates = disease_data[disease_data['outbreak'] == 1]['date']
     outbreak_cases = disease_data[disease_data['outbreak'] == 1]['cases']
     plt.scatter(outbreak_dates, outbreak_cases,
