@@ -171,6 +171,32 @@ def outbreak_forecasting():
 
                 st.pyplot(fig)
 
+                # Show user details for outbreak cases
+                outbreak_rows = disease_data[disease_data['outbreak'] == 1]
+                latest_date = disease_data['date'].max()
+
+                if latest_date not in outbreak_rows['date'].values:
+                    # Optionally add the latest date row
+                    latest_row = disease_data[disease_data['date']
+                                              == latest_date]
+                    outbreak_rows = pd.concat([outbreak_rows, latest_row])
+
+                if not outbreak_rows.empty:
+                    st.markdown(f"**User details for {disease} outbreaks:**")
+                    # For each outbreak date, show user info
+                    for _, row in outbreak_rows.iterrows():
+                        outbreak_date = row['date']
+                        # Filter original df for matching date and disease
+                        matching_users = df[
+                            (pd.to_datetime(df['date']) == pd.to_datetime(outbreak_date)) &
+                            (df['prognosis'] == disease)
+                        ][['name', 'age', 'gender', 'location']]
+                        if not matching_users.empty:
+                            num_cases = len(matching_users)
+                            with st.expander(f"Outbreak on {outbreak_date.date()} ({num_cases} case{'s' if num_cases != 1 else ''})"):
+                                st.dataframe(
+                                    matching_users.reset_index(drop=True))
+
         except Exception as e:
             st.error(f"Outbreak Detection failed: {e}")
 
