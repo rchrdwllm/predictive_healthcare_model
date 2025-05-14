@@ -5,9 +5,17 @@ import matplotlib.pyplot as plt
 import joblib
 from disease_preprocess import count_cases
 from disease_outbreak import detect_outbreak_per_day, predict_future_outbreaks
+import streamlit as st
+import pandas as pd
+import os
+from datetime import datetime
+
 
 model = joblib.load('models/disease_prediction_model.pkl')
 le = joblib.load('encoders/label_encoder.pkl')
+
+
+
 
 symptoms = [
     'itching', 'skin_rash', 'nodal_skin_eruptions', 'continuous_sneezing', 'shivering', 'chills',
@@ -40,39 +48,78 @@ symptoms = [
     'blister', 'red_sore_around_nose', 'yellow_crust_ooze'
 ]
 
+location = ['Pasig City', 'Marikina City', 'Quezon City']
+
 
 def symptom_checker():
     st.subheader("Disease Prediction")
+
     patient_name = st.text_input("Patient Name")
     patient_age = st.number_input("Age", min_value=0, max_value=120, step=1)
-    patient_gender = st.selectbox("Gender", ["Male", "Female", "Other"])
-    patient_location = st.text_input("Location")
-    selected_symptoms = st.multiselect("Select Symptoms", symptoms)
-    if st.button("Predict Disease"):
-        user_input = {symptom: 0 for symptom in symptoms}
-        for symptom in selected_symptoms:
-            user_input[symptom] = 1
-        input_df = pd.DataFrame([user_input])
-        if not selected_symptoms:
+    patient_gender = st.selectbox("Gender", ["Male", "Female"], index=None)
+    locations = ['Pasig City', 'Marikina City', 'Quezon City']
+    patient_location = st.selectbox('Location', locations, index=None)
+
+    # Display-friendly symptom names
+    symptom_map = {s.replace("_", " ").replace("  ", " ").strip().capitalize(): s for s in symptoms}
+    display_symptoms = list(symptom_map.keys())
+    selected_symptoms_display = st.multiselect("Select Symptoms", display_symptoms)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        predict_button = st.button("Predict Disease")
+    with col2:
+        record_button = st.button("Record")
+
+    if predict_button or record_button:
+        if not selected_symptoms_display:
             st.warning("Please select at least one symptom.")
             return
-        if not patient_name or not patient_location:
-            st.warning("Please fill in the patient details.")
+        if not patient_name or not patient_location or patient_gender is None:
+            st.warning("Please fill in all patient details.")
             return
-        try:
+
+        # Map display names to internal symptom keys
+        selected_symptoms = [symptom_map[disp] for disp in selected_symptoms_display]
+        user_input = {symptom: 1 if symptom in selected_symptoms else 0 for symptom in symptoms}
+        input_df = pd.DataFrame([user_input])
+        prediction = model.predict(input_df)
+        predicted_disease = le.inverse_transform(prediction)[0]
+
+        if predict_button:
+            st.success(f"Predicted Disease: **{predicted_disease}**")
+
+        if record_button:
+            
+            # Reindex input_df to match the model's expected input
             input_df = input_df.reindex(columns=symptoms, fill_value=0)
+
+            # Predict
             prediction = model.predict(input_df)
             predicted_disease = le.inverse_transform(prediction)[0]
-            input_df['date'] = pd.to_datetime('today').normalize()
-            input_df['prognosis'] = predicted_disease
-            input_df['name'] = patient_name
-            input_df['age'] = patient_age
-            input_df['gender'] = patient_gender
-            input_df['location'] = patient_location
+
+            # Create proper format for saving to CSV
+            record = {
+                'Date': pd.to_datetime('today').normalize().date(),
+                'Name': patient_name,
+                'Age': patient_age,
+                'Gender': patient_gender,
+                'Location': patient_location,
+                'Disease': predicted_disease,
+            }
+
+            # Add selected symptoms in Symptom_1 to Symptom_17
+            for i in range(1, 18):
+                record[f'Symptom_{i}'] = selected_symptoms[i - 1] if i <= len(selected_symptoms) else ''
+
+            # Save to CSV
             csv_path = 'dataset/sample_user_data.csv'
             file_exists = os.path.isfile(csv_path)
-            input_df.to_csv(csv_path, mode='a',
-                            header=not file_exists, index=False)
+
+            record_df = pd.DataFrame([record])
+            record_df.to_csv(csv_path, mode='a', header=not file_exists, index=False)
+
+            # Display results
             st.markdown(f"""
             ### Patient Details:
             - **Name:** {patient_name}
@@ -83,9 +130,9 @@ def symptom_checker():
             ### Predicted Disease:
             **{predicted_disease}**
             """)
-        except Exception as e:
-            st.error(f"Prediction failed: {e}")
+        
 
+ 
 
 def outbreak_forecasting():
     st.subheader("Outbreak Detection and Forecasting")
