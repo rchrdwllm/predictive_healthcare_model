@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from disease_preprocess import count_cases
 from disease_outbreak import detect_outbreak_per_day, predict_future_outbreaks
-from disease_detect import check_symptoms
+# from disease_detect import check_symptoms
 
 # so eto muna kunwari gui dedetect ng disease, after non maa-add siya sa 'dataset/sample_user_data.csv'
 # accessible yung last entry ng user sa `latest_entry` variable if ever na need
-latest_entry = check_symptoms()
+# latest_entry = check_symptoms()
 
 # let's say na lang na may master list na tayo ng entry ng users of their symptoms and kasama na dun yung predicted disease
 # bale manggagaling 'to sa user input ng symptoms nila
@@ -32,32 +32,32 @@ forecasted_outbreaks = predict_future_outbreaks(disease_counts, days=7)
 print('\nForecasted outbreaks:\n', forecasted_outbreaks)
 
 # for plotting
-split_date = detected_outbreaks['date'].max()
+split_date = detected_outbreaks['Date'].max()
 
-forecasted_outbreaks['source'] = forecasted_outbreaks['date'].apply(
+forecasted_outbreaks['source'] = forecasted_outbreaks['Date'].apply(
     lambda d: 'historical' if pd.to_datetime(
         d) <= pd.to_datetime(split_date) else 'forecasted'
 )
 
 total_outbreaks = forecasted_outbreaks.copy()
 
-total_outbreaks['date'] = pd.to_datetime(total_outbreaks['date'])
+total_outbreaks['Date'] = pd.to_datetime(total_outbreaks['Date'])
 
-for disease in total_outbreaks['prognosis'].unique():
-    disease_data = total_outbreaks[total_outbreaks['prognosis'] == disease]
+for disease in total_outbreaks['Disease'].unique():
+    disease_data = total_outbreaks[total_outbreaks['Disease'] == disease]
     plt.figure(figsize=(10, 5))
 
     hist = disease_data[disease_data['source'] == 'historical']
-    plt.plot(hist['date'], hist['cases'],
+    plt.plot(hist['Date'], hist['Cases'],
              label='Historical', marker='o', color='blue')
 
     forecast = disease_data[disease_data['source'] == 'forecasted']
     if not forecast.empty:
-        plt.plot(forecast['date'], forecast['cases'],
+        plt.plot(forecast['Date'], forecast['Cases'],
                  label='Forecasted', marker='o', color='orange')
 
-    outbreak_dates = disease_data[disease_data['outbreak'] == 1]['date']
-    outbreak_cases = disease_data[disease_data['outbreak'] == 1]['cases']
+    outbreak_dates = disease_data[disease_data['Outbreak'] == 1]['Date']
+    outbreak_cases = disease_data[disease_data['Outbreak'] == 1]['Cases']
     plt.scatter(outbreak_dates, outbreak_cases,
                 color='red', label='Outbreak', zorder=5)
     plt.title(f'Disease Cases and Outbreaks: {disease}')
