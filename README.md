@@ -54,6 +54,10 @@ SymbiPredict is a comprehensive predictive healthcare system designed to identif
    ```bash
    pip install -r requirements.txt
    ```
+3. Additionally, install Streamlit if not included in the requirements.txt:
+   ```bash
+   pip install streamlit
+   ```
 
 ## Usage
 
@@ -62,7 +66,7 @@ SymbiPredict is a comprehensive predictive healthcare system designed to identif
 Execute the main application which includes symptom checking, outbreak detection, and forecasting:
 
 ```bash
-python app.py
+streamlit run ui.py
 ```
 
 This will:
