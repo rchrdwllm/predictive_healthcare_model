@@ -39,8 +39,11 @@ def detect_outbreak_per_day(df: pd.DataFrame, window: int = 3) -> pd.DataFrame:
         lambda x: x.rolling(window, min_periods=1).mean().shift(1)
     ).reset_index(level=0, drop=True)
 
-    daily['Outbreak'] = ((daily['rolling_mean_prev'].notna()) & (
-        daily['Cases'] >= 2 * daily['rolling_mean_prev'])).astype(int)
+    # Only flag outbreak if rolling_mean_prev > 0 and Cases > 0
+    daily['Outbreak'] = ((daily['rolling_mean_prev'].notna()) &
+                         (daily['rolling_mean_prev'] > 0) &
+                         (daily['Cases'] > 0) &
+                         (daily['Cases'] >= 2 * daily['rolling_mean_prev'])).astype(int)
     daily = daily.drop(columns=['rolling_mean_prev'])
 
     return daily
