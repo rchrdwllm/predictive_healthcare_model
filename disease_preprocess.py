@@ -9,6 +9,6 @@ def count_cases(df: pd.DataFrame) -> pd.DataFrame:
     '''
 
     disease_counts = df.groupby(
-        ['Date', 'Disease']).size().reset_index(name='Cases')
+    ['Date', 'Disease']).size().reset_index(name='Cases')
 
     return disease_counts

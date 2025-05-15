@@ -48,7 +48,7 @@ def detect_outbreak_per_day(df: pd.DataFrame, window: int = 3) -> pd.DataFrame:
 
 def predict_future_outbreaks(df: pd.DataFrame, days: int = 7) -> pd.DataFrame:
     '''
-    Predicts future outbreaks based on the last known cases.
+    Predicts future outbreaks based on the last known Cases.
     Args:
         df (pd.DataFrame): DataFrame with 'Date', 'Disease', and 'Cases' columns.
         days (int): Number of days to predict.
