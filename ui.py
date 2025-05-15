@@ -13,13 +13,13 @@ import pydeck as pdk
 
 
 model = joblib.load('models/disease_prediction_model.joblib')
-symptoms = ['muscle_weakness', 'acidity', 'loss_of_balance', 'sweating', 'red_sore_around_nose', 'blurred_and_distorted_vision', 'pain_behind_the_eyes', 'small_dents_in_nails', 'visual_disturbances', 'blackheads', 'continuous_sneezing', 'mood_swings', 'history_of_alcohol_consumption', 'brittle_nails', 'throat_irritation', 'dark_urine', 'neck_pain', 'pain_during_bowel_movements', 'chills', 'fluid_overload', 'acute_liver_failure', 'sunken_eyes', 'increased_appetite', 'vomiting', 'restlessness', 'spinning_movements', 'loss_of_smell', 'weight_gain', 'obesity', 'stiff_neck', 'passage_of_gases', 'back_pain', 'dischromic _patches', 'bruising', 'toxic_look_(typhos)', 'swelled_lymph_nodes', 'spotting_ urination', 'irritation_in_anus', 'pus_filled_pimples', 'irritability', 'prominent_veins_on_calf', 'nodal_skin_eruptions', 'bloody_stool', 'high_fever', 'blister', 'joint_pain', 'abdominal_pain', 'movement_stiffness', 'yellowing_of_eyes', 'scurring', 'irregular_sugar_level', 'inflammatory_nails', 'fatigue', 'cough', 'patches_in_throat', 'swollen_extremeties', 'stomach_bleeding', 'muscle_wasting', 'red_spots_over_body', 'swollen_legs', 'stomach_pain', 'indigestion', 'anxiety', 'lethargy', 'dehydration', 'slurred_speech', 'burning_micturition', 'malaise', 'bladder_discomfort', 'internal_itching', 'redness_of_eyes', 'foul_smell_of urine', 'belly_pain', 'palpitations', 'itching', 'excessive_hunger', 'weakness_in_limbs', 'pain_in_anal_region', 'hip_joint_pain', 'skin_rash', 'painful_walking', 'silver_like_dusting', 'muscle_pain', 'dizziness', 'enlarged_thyroid', 'blood_in_sputum', 'puffy_face_and_eyes', 'abnormal_menstruation', 'yellow_crust_ooze', 'extra_marital_contacts', 'drying_and_tingling_lips', 'chest_pain', 'mild_fever', 'shivering', 'diarrhoea', 'receiving_blood_transfusion', 'rusty_sputum', 'yellowish_skin', 'swollen_blood_vessels', 'cramps', 'weakness_of_one_body_side', 'polyuria', 'congestion', 'constipation', 'distention_of_abdomen', 'swelling_joints', 'family_history', 'fast_heart_rate', 'coma', 'continuous_feel_of_urine', 'knee_pain', 'watering_from_eyes', 'sinus_pressure', 'cold_hands_and_feets', 'swelling_of_stomach', 'phlegm', 'runny_nose', 'loss_of_appetite', 'ulcers_on_tongue', 'altered_sensorium', 'receiving_unsterile_injections', 'depression', 'headache', 'skin_peeling', 'mucoid_sputum', 'nausea', 'weight_loss', 'breathlessness', 'unsteadiness', 'yellow_urine', 'lack_of_concentration']
+symptoms = ['muscle_weakness', 'acidity', 'loss_of_balance', 'sweating', 'red_sore_around_nose', 'blurred_and_distorted_vision', 'pain_behind_the_eyes', 'small_dents_in_nails', 'visual_disturbances', 'blackheads', 'continuous_sneezing', 'mood_swings', 'history_of_alcohol_consumption', 'brittle_nails', 'throat_irritation', 'dark_urine', 'neck_pain', 'pain_during_bowel_movements', 'chills', 'fluid_overload', 'acute_liver_failure', 'sunken_eyes', 'increased_appetite', 'vomiting', 'restlessness', 'spinning_movements', 'loss_of_smell', 'weight_gain', 'obesity', 'stiff_neck', 'passage_of_gases', 'back_pain', 'dischromic _patches', 'bruising', 'toxic_look_(typhos)', 'swelled_lymph_nodes', 'spotting_ urination', 'irritation_in_anus', 'pus_filled_pimples', 'irritability', 'prominent_veins_on_calf', 'nodal_skin_eruptions', 'bloody_stool', 'high_fever', 'blister', 'joint_pain', 'abdominal_pain', 'movement_stiffness', 'yellowing_of_eyes', 'scurring', 'irregular_sugar_level', 'inflammatory_nails', 'fatigue', 'cough', 'patches_in_throat', 'swollen_extremeties', 'stomach_bleeding', 'muscle_wasting', 'red_spots_over_body', 'swollen_legs', 'stomach_pain', 'indigestion', 'anxiety', 'lethargy', 'dehydration', 'slurred_speech',
+            'burning_micturition', 'malaise', 'bladder_discomfort', 'internal_itching', 'redness_of_eyes', 'foul_smell_of urine', 'belly_pain', 'palpitations', 'itching', 'excessive_hunger', 'weakness_in_limbs', 'pain_in_anal_region', 'hip_joint_pain', 'skin_rash', 'painful_walking', 'silver_like_dusting', 'muscle_pain', 'dizziness', 'enlarged_thyroid', 'blood_in_sputum', 'puffy_face_and_eyes', 'abnormal_menstruation', 'yellow_crust_ooze', 'extra_marital_contacts', 'drying_and_tingling_lips', 'chest_pain', 'mild_fever', 'shivering', 'diarrhoea', 'receiving_blood_transfusion', 'rusty_sputum', 'yellowish_skin', 'swollen_blood_vessels', 'cramps', 'weakness_of_one_body_side', 'polyuria', 'congestion', 'constipation', 'distention_of_abdomen', 'swelling_joints', 'family_history', 'fast_heart_rate', 'coma', 'continuous_feel_of_urine', 'knee_pain', 'watering_from_eyes', 'sinus_pressure', 'cold_hands_and_feets', 'swelling_of_stomach', 'phlegm', 'runny_nose', 'loss_of_appetite', 'ulcers_on_tongue', 'altered_sensorium', 'receiving_unsterile_injections', 'depression', 'headache', 'skin_peeling', 'mucoid_sputum', 'nausea', 'weight_loss', 'breathlessness', 'unsteadiness', 'yellow_urine', 'lack_of_concentration']
 location = ['Pasig City', 'Marikina City', 'Quezon City']
 
 
 def symptom_checker():
     st.subheader("🩺 Disease Prediction")
-
 
     if 'predicted_disease' not in st.session_state:
         st.session_state.predicted_disease = None
@@ -29,15 +29,18 @@ def symptom_checker():
         st.session_state.patient_info = {}
 
     patient_name = st.text_input("📝 **Patient Name**")
-    patient_age = st.number_input("🎂 **Age**", min_value=0, max_value=120, step=1)
-    patient_gender = st.selectbox("⚧️ **Gender**", ["Male", "Female"], index=None)
+    patient_age = st.number_input(
+        "🎂 **Age**", min_value=0, max_value=120, step=1)
+    patient_gender = st.selectbox(
+        "⚧️ **Gender**", ["Male", "Female"], index=None)
     locations = ['Pasig City', 'Marikina City', 'Quezon City']
     patient_location = st.selectbox('🌍 **Location**', locations, index=None)
 
-
-    symptom_map = {s.replace("_", " ").replace("  ", " ").strip().capitalize(): s for s in symptoms}
+    symptom_map = {s.replace("_", " ").replace(
+        "  ", " ").strip().capitalize(): s for s in symptoms}
     display_symptoms = list(symptom_map.keys())
-    selected_symptoms_display = st.multiselect("🦠 **Select Symptoms**", display_symptoms)
+    selected_symptoms_display = st.multiselect(
+        "🦠 **Select Symptoms**", display_symptoms)
 
     predict_button = st.button("🔍 **Predict Disease**")
 
@@ -49,8 +52,8 @@ def symptom_checker():
             st.warning("⚠️ **Please fill in all patient details.**")
             return
 
-
-        selected_symptoms = [symptom_map[disp] for disp in selected_symptoms_display]
+        selected_symptoms = [symptom_map[disp]
+                             for disp in selected_symptoms_display]
         user_input = " ".join(selected_symptoms)
         predicted_disease = model.predict([user_input])[0]
 
@@ -63,7 +66,6 @@ def symptom_checker():
             'Location': patient_location
         }
 
-
         st.markdown(f"""
         ### ✨ **Patient Details:**
         - 👤 **Name:** {patient_name}
@@ -74,7 +76,6 @@ def symptom_checker():
         ### 🔬 **Predicted Disease:**
         🦠 **{predicted_disease}**
         """)
-
 
     if st.session_state.predicted_disease:
         if st.button("💾 **Record Patient Data**"):
@@ -89,24 +90,25 @@ def symptom_checker():
             }
 
             for i in range(1, 18):
-                record[f'Symptom_{i}'] = st.session_state.selected_symptoms[i - 1] if i <= len(st.session_state.selected_symptoms) else ''
+                record[f'Symptom_{i}'] = st.session_state.selected_symptoms[i -
+                                                                            1] if i <= len(st.session_state.selected_symptoms) else ''
 
             csv_path = 'dataset/sample_user_data.csv'
             file_exists = os.path.isfile(csv_path)
             record_df = pd.DataFrame([record])
-            record_df.to_csv(csv_path, mode='a', header=not file_exists, index=False)
+            record_df.to_csv(csv_path, mode='a',
+                             header=not file_exists, index=False)
 
-            st.success("✅ **Patient information and disease record saved successfully!**")
+            st.success(
+                "✅ **Patient information and disease record saved successfully!**")
 
             with open(csv_path, 'rb') as f:
-                st.download_button(label="📥 **Download CSV**", data=f, file_name='patient_records.csv', mime='text/csv')
+                st.download_button(label="📥 **Download CSV**", data=f,
+                                   file_name='patient_records.csv', mime='text/csv')
 
             st.session_state.predicted_disease = None
             st.session_state.selected_symptoms = []
             st.session_state.patient_info = {}
-
-
-
 
 
 def outbreak_forecasting():
@@ -115,36 +117,40 @@ def outbreak_forecasting():
         try:
             df = pd.read_csv('dataset/sample_user_data.csv')
             if 'Date' not in df.columns or 'Disease' not in df.columns:
-                st.error("Required columns 'Date' and 'Disease' missing in dataset.")
+                st.error(
+                    "Required columns 'Date' and 'Disease' missing in dataset.")
                 return
-
 
             disease_counts = count_cases(df)
             detected_outbreaks = detect_outbreak_per_day(disease_counts)
-            forecasted_outbreaks = predict_future_outbreaks(disease_counts, days=7)
+            forecasted_outbreaks = predict_future_outbreaks(
+                disease_counts, days=7)
 
             st.write("Detected Outbreaks:", detected_outbreaks)
             st.write("Forecasted Outbreaks:", forecasted_outbreaks)
 
-
             split_date = detected_outbreaks['Date'].max()
             forecasted_outbreaks['source'] = forecasted_outbreaks['Date'].apply(
-                lambda d: 'historical' if pd.to_datetime(d) <= pd.to_datetime(split_date) else 'forecasted'
+                lambda d: 'historical' if pd.to_datetime(
+                    d) <= pd.to_datetime(split_date) else 'forecasted'
             )
-
 
             for disease in forecasted_outbreaks['Disease'].unique():
                 disease_data = forecasted_outbreaks[forecasted_outbreaks['Disease'] == disease]
                 fig, ax = plt.subplots(figsize=(10, 5))
                 hist = disease_data[disease_data['source'] == 'historical']
-                ax.plot(hist['Date'], hist['Cases'], label='Historical', marker='o', color='blue')
+                ax.plot(hist['Date'], hist['Cases'],
+                        label='Historical', marker='o', color='blue')
                 forecast = disease_data[disease_data['source'] == 'forecasted']
                 if not forecast.empty:
-                    ax.plot(forecast['Date'], forecast['Cases'], label='Forecasted', marker='o', color='orange')
+                    ax.plot(forecast['Date'], forecast['Cases'],
+                            label='Forecasted', marker='o', color='orange')
 
                 outbreak_dates = disease_data[disease_data['Outbreak'] == 1]['Date']
-                outbreak_cases = disease_data[disease_data['Outbreak'] == 1]['Cases']
-                ax.scatter(outbreak_dates, outbreak_cases, color='red', label='Outbreak', zorder=5)
+                outbreak_cases = disease_data[disease_data['Outbreak']
+                                              == 1]['Cases']
+                ax.scatter(outbreak_dates, outbreak_cases,
+                           color='red', label='Outbreak', zorder=5)
                 ax.set_title(f'Disease Cases and Outbreaks: {disease}')
                 ax.set_xlabel('Date')
                 fig.autofmt_xdate()
@@ -152,11 +158,11 @@ def outbreak_forecasting():
                 ax.legend()
                 st.pyplot(fig)
 
-
                 outbreak_rows = disease_data[disease_data['Outbreak'] == 1]
                 latest_date = disease_data['Date'].max()
                 if latest_date not in outbreak_rows['Date'].values:
-                    latest_row = disease_data[disease_data['Date'] == latest_date]
+                    latest_row = disease_data[disease_data['Date']
+                                              == latest_date]
                     outbreak_rows = pd.concat([outbreak_rows, latest_row])
 
                 if not outbreak_rows.empty:
@@ -170,10 +176,11 @@ def outbreak_forecasting():
                         if not matching_users.empty:
                             num_cases = len(matching_users)
                             with st.expander(f"Outbreak on {outbreak_date} ({num_cases} case{'s' if num_cases != 1 else ''})"):
-                                st.dataframe(matching_users.reset_index(drop=True))
+                                st.dataframe(
+                                    matching_users.reset_index(drop=True))
 
-
-            summary = df.groupby(['Location', 'Disease']).size().reset_index(name='Cases')
+            summary = df.groupby(['Location', 'Disease']
+                                 ).size().reset_index(name='Cases')
             max_row = summary.loc[summary['Cases'].idxmax()]
             max_cases = max_row['Cases']
             max_location = max_row['Location']
@@ -181,10 +188,10 @@ def outbreak_forecasting():
 
             threshold = 5
             if max_cases > threshold:
-                st.warning(f"🚨 **Possible Outbreak detected:** {max_location} → {max_disease} ({int(max_cases)} cases)")
+                st.warning(
+                    f"🚨 **Possible Outbreak detected:** {max_location} → {max_disease} ({int(max_cases)} cases)")
             else:
                 st.info("No significant outbreaks detected based on current data.")
-
 
             st.subheader("🗺️ Heatmap of Recorded Disease Cases")
             city_coords = {
@@ -192,8 +199,10 @@ def outbreak_forecasting():
                 'Marikina City': {'lat': 14.6507, 'lon': 121.1029},
                 'Quezon City': {'lat': 14.6760, 'lon': 121.0437}
             }
-            df['latitude'] = df['Location'].map(lambda x: city_coords.get(x, {}).get('lat'))
-            df['longitude'] = df['Location'].map(lambda x: city_coords.get(x, {}).get('lon'))
+            df['latitude'] = df['Location'].map(
+                lambda x: city_coords.get(x, {}).get('lat'))
+            df['longitude'] = df['Location'].map(
+                lambda x: city_coords.get(x, {}).get('lon'))
             df_heat = df.dropna(subset=['latitude', 'longitude'])
 
             if not df_heat.empty:
@@ -220,7 +229,6 @@ def outbreak_forecasting():
 
         except Exception as e:
             st.error(f"Outbreak Detection failed: {e}")
-
 
 
 def main():
