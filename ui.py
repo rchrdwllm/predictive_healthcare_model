@@ -40,6 +40,7 @@ def symptom_checker():
     selected_symptoms_display = st.multiselect("🦠 **Select Symptoms**", display_symptoms)
 
     predict_button = st.button("🔍 **Predict Disease**")
+   
 
     if predict_button:
         if not selected_symptoms_display:
@@ -65,19 +66,74 @@ def symptom_checker():
 
 
         st.markdown(f"""
-        ### ✨ **Patient Details:**
-        - 👤 **Name:** {patient_name}
-        - 🎂 **Age:** {patient_age}
-        - ⚧️ **Gender:** {patient_gender}
-        - 🌍 **Location:** {patient_location}
-
+     
         ### 🔬 **Predicted Disease:**
         🦠 **{predicted_disease}**
         """)
+                # Load recorded data
+        try:
+            df = pd.read_csv('dataset/sample_user_data.csv')
+            disease_counts = count_cases(df)
+            detected_outbreaks = detect_outbreak_per_day(disease_counts)
+            forecasted_outbreaks = predict_future_outbreaks(disease_counts, days=7)
+
+            # Tag historical vs forecasted
+            split_date = detected_outbreaks['Date'].max()
+            forecasted_outbreaks['source'] = forecasted_outbreaks['Date'].apply(
+                lambda d: 'historical' if pd.to_datetime(d) <= pd.to_datetime(split_date) else 'forecasted'
+            )
+
+            # Filter data for the predicted disease
+            disease_data = forecasted_outbreaks[forecasted_outbreaks['Disease'] == predicted_disease]
+            if not disease_data.empty and disease_data['Outbreak'].any():
+                st.markdown("### 🚨 **Outbreak Detected for this Disease!**")
+
+                fig, ax = plt.subplots(figsize=(10, 5))
+                hist = disease_data[disease_data['source'] == 'historical']
+                forecast = disease_data[disease_data['source'] == 'forecasted']
+
+                ax.plot(hist['Date'], hist['Cases'], label='Historical', marker='o', color='blue')
+                if not forecast.empty:
+                    ax.plot(forecast['Date'], forecast['Cases'], label='Forecasted', marker='o', color='orange')
+
+                outbreak_dates = disease_data[disease_data['Outbreak'] == 1]['Date']
+                outbreak_cases = disease_data[disease_data['Outbreak'] == 1]['Cases']
+                ax.scatter(outbreak_dates, outbreak_cases, color='red', label='Outbreak', zorder=5)
+
+                ax.set_title(f'📈 Disease Cases and Outbreaks: {predicted_disease}')
+                ax.set_xlabel('Date')
+                fig.autofmt_xdate()
+                ax.set_ylabel('Cases')
+                ax.legend()
+                st.pyplot(fig)
+
+                # Show user details for outbreak dates
+                outbreak_rows = disease_data[disease_data['Outbreak'] == 1]
+                latest_date = disease_data['Date'].max()
+                if latest_date not in outbreak_rows['Date'].values:
+                    latest_row = disease_data[disease_data['Date'] == latest_date]
+                    outbreak_rows = pd.concat([outbreak_rows, latest_row])
+
+                if not outbreak_rows.empty:
+                    st.markdown(f"**User details for {predicted_disease} Outbreaks:**")
+                    for _, row in outbreak_rows.iterrows():
+                        outbreak_date = row['Date']
+                        matching_users = df[
+                            (pd.to_datetime(df['Date']) == pd.to_datetime(outbreak_date)) &
+                            (df['Disease'] == predicted_disease)
+                        ][['Name', 'Age', 'Gender', 'Location']]
+                        if not matching_users.empty:
+                            num_cases = len(matching_users)
+                            with st.expander(f"Outbreak on {outbreak_date} ({num_cases} case{'s' if num_cases != 1 else ''})"):
+                                st.dataframe(matching_users.reset_index(drop=True))
+
+        except Exception as e:
+            st.error(f"Error while checking outbreak status: {e}")
 
 
     if st.session_state.predicted_disease:
         if st.button("💾 **Record Patient Data**"):
+            
 
             record = {
                 'Date': pd.to_datetime('today').normalize().date(),
@@ -104,15 +160,15 @@ def symptom_checker():
             st.session_state.predicted_disease = None
             st.session_state.selected_symptoms = []
             st.session_state.patient_info = {}
-
-
+            
+            
+    
 
 
 
 def outbreak_forecasting():
     st.subheader("Outbreak Detection and Forecasting")
-    if st.button("Detect and Forecast Outbreaks"):
-        try:
+    try:
             df = pd.read_csv('dataset/sample_user_data.csv')
             if 'Date' not in df.columns or 'Disease' not in df.columns:
                 st.error("Required columns 'Date' and 'Disease' missing in dataset.")
@@ -125,14 +181,14 @@ def outbreak_forecasting():
 
             st.write("Detected Outbreaks:", detected_outbreaks)
             st.write("Forecasted Outbreaks:", forecasted_outbreaks)
-
-
+        
             split_date = detected_outbreaks['Date'].max()
             forecasted_outbreaks['source'] = forecasted_outbreaks['Date'].apply(
                 lambda d: 'historical' if pd.to_datetime(d) <= pd.to_datetime(split_date) else 'forecasted'
             )
 
-
+            """ 
+            #ilipat sa disease prediction
             for disease in forecasted_outbreaks['Disease'].unique():
                 disease_data = forecasted_outbreaks[forecasted_outbreaks['Disease'] == disease]
                 fig, ax = plt.subplots(figsize=(10, 5))
@@ -171,7 +227,7 @@ def outbreak_forecasting():
                             num_cases = len(matching_users)
                             with st.expander(f"Outbreak on {outbreak_date} ({num_cases} case{'s' if num_cases != 1 else ''})"):
                                 st.dataframe(matching_users.reset_index(drop=True))
-
+            
 
             summary = df.groupby(['Location', 'Disease']).size().reset_index(name='Cases')
             max_row = summary.loc[summary['Cases'].idxmax()]
@@ -179,11 +235,7 @@ def outbreak_forecasting():
             max_location = max_row['Location']
             max_disease = max_row['Disease']
 
-            threshold = 5
-            if max_cases > threshold:
-                st.warning(f"🚨 **Possible Outbreak detected:** {max_location} → {max_disease} ({int(max_cases)} cases)")
-            else:
-                st.info("No significant outbreaks detected based on current data.")
+            """
 
 
             st.subheader("🗺️ Heatmap of Recorded Disease Cases")
@@ -218,17 +270,24 @@ def outbreak_forecasting():
             else:
                 st.warning("No latitude/longitude data available for heatmap.")
 
-        except Exception as e:
+    except Exception as e:
             st.error(f"Outbreak Detection failed: {e}")
 
 
-
+def display():
+    st.subheader("Patient Symptom and Diagnosis Log")
+    user_data = pd.read_csv('dataset/sample_user_data.csv')
+    user_data_limited = user_data.iloc[:, :]
+    st.dataframe(user_data_limited, use_container_width=True, height=780)  # scrollable view
+    
 def main():
-    tab1, tab2 = st.tabs(["🩺 Disease Prediction", "📊 Outbreak Forecasting"])
+    tab1, tab2, tab3 = st.tabs(["🩺 Disease Prediction", "📊 Outbreak Forecasting", '📝 Patient Symptom and Diagnosis Log'])
     with tab1:
         symptom_checker()
     with tab2:
         outbreak_forecasting()
+    with tab3:
+        display()
 
 
 if __name__ == "__main__":
