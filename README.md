@@ -86,27 +86,22 @@ If you need to retrain the disease prediction model with updated data:
 python disease_detect_train.py
 ```
 
-This will train a Random Forest model using the dataset in `dataset/symbipredict_2022.csv` and save the model and label encoder to the `models` and `encoders` directories.
+This will train a LinearSVC model using the dataset in `dataset/symbipredict_2022.csv` and save the model and label encoder to the `models` and `encoders` directories.
 
 ## Project Structure
 
 ```
 predictive_healthcare_model/
-├── app.py                     # Main application entry point
-├── disease_detect.py          # Disease prediction GUI and logic
 ├── disease_detect_train.py    # Training script for the disease prediction model
 ├── disease_forecast.py        # Time series forecasting for disease trends
 ├── disease_outbreak.py        # Outbreak detection algorithms
 ├── disease_preprocess.py      # Data preprocessing utilities
-├── flow.txt                   # Process flow documentation
 ├── requirements.txt           # Project dependencies
 ├── dataset/                   # Data directory
 │   ├── sample_user_data.csv   # User symptom entries and predictions
-│   └── symbipredict_2022.csv  # Training dataset for disease prediction
-├── encoders/                  # Directory for saved encoders
-│   └── label_encoder.pkl      # Label encoder for disease classes
+│   └── dataset.csv  # Training dataset for disease prediction
 └── models/                    # Directory for saved models
-    └── disease_prediction_model.pkl  # Trained Random Forest model
+    └── disease_prediction_model.joblib  # Trained LinearSVC model
 ```
 
 ## How It Works
@@ -124,7 +119,7 @@ predictive_healthcare_model/
 
 #### 1. Disease Prediction
 
-The system uses a Random Forest classifier to predict diseases based on user-inputted symptoms. The model is trained on a comprehensive dataset that maps symptoms to diagnoses.
+The system uses a LinearSVC classifier to predict diseases based on user-inputted symptoms. The model is trained on a comprehensive dataset that maps symptoms to diagnoses.
 
 #### 2. Data Collection
 
@@ -153,13 +148,10 @@ The system generates plots for each disease showing:
 
 ## Model Training
 
-The disease prediction model uses scikit-learn's RandomForestClassifier with hyperparameter tuning through GridSearchCV. The training process includes:
+The disease prediction model uses scikit-learn's LinearSVC classifier. The training process includes:
 
 - Feature selection from the symptom dataset
-- Label encoding for disease categories
-- Train/test splitting (80/20)
-- Cross-validation for performance assessment
-- Hyperparameter optimization
+- Train/test splitting (75/25)
 - Model evaluation using classification reports
 
 The model is trained to recognize patterns in over 100 different symptoms and associate them with specific diseases. This allows for accurate prediction even with partial symptom information.
