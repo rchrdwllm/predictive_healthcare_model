@@ -356,3 +356,4 @@ Date,Name,Age,Gender,Location,Disease,Symptom_1,Symptom_2,Symptom_3,Symptom_4,Sy
 2025-05-16,Aga,23,Female,Marikina City,Fungal infection,skin_rash,,,,,,,,,,,,,,,,
 2025-05-16,Jeny Kim,30,Female,Marikina City,Psoriasis,muscle_weakness,skin_peeling,,,,,,,,,,,,,,,
 2025-05-16,sample patient,21,Male,Pasig City,Migraine,acidity,sweating,blurred_and_distorted_vision,,,,,,,,,,,,,,
+2025-05-16,sample patient,0,Female,Marikina City,Allergy,continuous_sneezing,,,,,,,,,,,,,,,,
